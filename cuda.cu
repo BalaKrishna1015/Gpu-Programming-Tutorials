@@ -54,6 +54,10 @@ int main() {
         std::cout << "  Max Threads Per Block:       " << prop.maxThreadsPerBlock << std::endl;
         std::cout << "  Shared Memory Per Block :     " << prop.sharedMemPerBlock / 1024 << " KB" << std::endl;
         std::cout << "  Warp Size:                   " << prop.warpSize << std::endl;
+        // New device properties
+        std::cout << "  Max Threads Dimension:       "<< prop.maxThreadsDim[0] << " X "<< prop.maxThreadsDim[1] << " X "<< prop.maxThreadsDim[2] << std::endl;
+        std::cout << "  Max Grid Size:               "<< prop.maxGridSize[0] << " X "<< prop.maxGridSize[1] << " X "<< prop.maxGridSize[2] << std::endl;
+        std::cout << "  Registers Per Block:         "<< prop.regsPerBlock << std::endl;
         std::cout << std::endl;
     }
 
