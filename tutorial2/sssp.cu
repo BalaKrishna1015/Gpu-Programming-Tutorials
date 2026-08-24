@@ -1,8 +1,6 @@
 #include <bits/stdc++.h>
 #include <cuda_runtime.h>
-
 #define INF INT_MAX
-
 using namespace std;
 
 __global__ void ssspGPU(int V, const int *rowPtr, const int *col,
