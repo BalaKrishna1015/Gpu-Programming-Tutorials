@@ -9,13 +9,10 @@ using namespace wmma;
 #define N 64
 #define TILE 16
 
-__global__ void tensorCoreMatMul(half *A, half *B, float *C)
-{
+__global__ void tensorCoreMatMul(half *A, half *B, float *C){
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     int warpId = threadId / 32;
-
     if (warpId >= 16)return;
-
     int tileRow = warpId / 4;
     int tileCol = warpId % 4;
     int row = tileRow * TILE;
@@ -26,8 +23,7 @@ __global__ void tensorCoreMatMul(half *A, half *B, float *C)
     fragment<accumulator, 16, 16, 16, float> c_frag;
     fill_fragment(c_frag, 0.0f);
 
-    for (int k = 0; k < 4; k++)
-    {
+    for (int k = 0; k < 4; k++){
         int A_index = row * N + k * TILE;
         int B_index = k * TILE * N + col;
         load_matrix_sync(a_frag, A + A_index, N);
@@ -36,7 +32,6 @@ __global__ void tensorCoreMatMul(half *A, half *B, float *C)
     }
 
     int C_index = row * N + col;
-
     store_matrix_sync(C + C_index,c_frag,N,mem_row_major);
 }
 
@@ -69,14 +64,7 @@ int main()
         for (int j = 0; j < N; j++){
             if (h_C[i * N + j] != 64.0f){
                 correct = false;
-
-                printf(
-                    "Error at C[%d][%d] = %f\n",
-                    i,
-                    j,
-                    h_C[i * N + j]
-                );
-
+                printf("Error at C[%d][%d] = %f\n",i,j,h_C[i * N + j]);
                 break;
             }
         }
@@ -85,10 +73,8 @@ int main()
     }
 
     if (correct){
-        printf(
-            "Matrix multiplication successful!\n"
-            "64x64 matrices multiplied using 16x16 Tensor Core tiles.\n"
-        );
+        printf("Matrix multiplication successful!\n"
+            "64x64 matrices multiplied using 16x16 Tensor Core tiles.\n");
     }
     else{
         printf("Matrix multiplication failed!\n");
